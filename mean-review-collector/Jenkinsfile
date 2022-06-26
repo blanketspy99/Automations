@@ -1,0 +1,106 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean and Build') {
+            steps {
+                sh '''rm -rf ${WORKSPACE}/.venv
+                        export PATH=/home/shahrukh/labs/pytemp/env/bin:$PATH
+                        virtualenv --python=python3 .venv
+                        export PATH=${WORKSPACE}/.venv/bin:$PATH
+                        pip3 install -r requirements.txt'''
+            }
+        }
+        stage('Tests') {
+            steps {
+                
+                sh '''# run tests
+                        export PATH=$WORKSPACE/.venv/bin:$PATH
+                        pip install -e .
+                        pytest --junitxml=test-reports/test-results.xml --cov=app --cov-report=xml --cov-report=html
+
+                        #pylint
+                        pylint app/ tests/ -r n --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.txt
+                    '''
+
+            }
+        }
+        stage('Sumbit Test and Scan Report - Sonar'){
+            steps {
+                withSonarQubeEnv('scan') {
+                    sh ''' /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/scan/bin/sonar-scanner scan -Dsonar.projectKey=my:mean-review-collector \
+                    -Dsonar.projectName=myQualityReviewMean$BUILD_NUMBER \
+                    -Dsonar.language=py \
+                    -Dsonar.python.pylint.reportPath=pylint.txt \
+                    -Dsonar.sources=. \
+                    -Dsonar.python.xunit.reportPath=test-reports/test-results.xml \
+                    -Dsonar.python.coverage.reportPath=coverage.xml \
+                    -Dsonar.coverage.exclusions=tests/**,*.py \
+                    -Dsonar.verbose=true '''
+                   
+                }
+            }
+            
+        
+            post {
+               
+                success {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('Package application and deploy to Jfrog') {
+            steps {
+            sh '''python3 setup.py sdist bdist_wheel'''
+            }
+
+            post {
+                success {
+                    script {
+                    
+                    def server = Artifactory.server 'central'
+                    def uploadSpec = """{
+                            "files": [
+                                {
+                                    "pattern": "dist/*whl",
+                                    "target": "generic-local/"
+                                },
+                                {
+                                    "pattern": "wsgi.py",
+                                    "target": "generic-local/"
+                                },
+                                {
+                                    "pattern": "Dockerfile",
+                                    "target": "generic-local/"
+                                },
+                                {
+                                    "pattern": "uwsgi.ini",
+                                    "target": "generic-local/"
+                                },
+                                {
+                                    "pattern": "requirements.txt",
+                                    "target": "generic-local/"
+                                },
+                                {
+                                    "pattern": "nginx.conf",
+                                    "target": "generic-local/"
+                                },
+                                {
+                                    "pattern": "start.sh",
+                                    "target": "generic-local/"
+                                }
+                            ]
+                        }"""
+                    server.upload(uploadSpec)
+                    
+                    def buildInfo = server.upload uploadSpec
+                    server.publishBuildInfo buildInfo
+
+                }
+                }
+            }
+        }
+
+    }
+}
+

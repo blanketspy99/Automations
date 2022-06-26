@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="container">
+	<img src="{{url_for('static', filename='meanreview.JPG')}}" align="middle" />
+  <h1>{% block title %}Mean Reviews{% endblock %}</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <p class="lead">Did you receive a mean review on your paper? Share it with us. Check the mean reviews others shared below:</p>
+
+  <blockquote class="blockquote">
+    <p class="mb-0">This paper is more appropriate for a speciality journal. Like, one that specializes in terrible papers.</p>
+    <footer class="blockquote-footer"><i> This is a default review ..........</i></footer>
+</blockquote> 
+
+  {% for review in reviews %}
+    <blockquote class="blockquote">
+      <p class="mb-0">{{ review['content'] }}</p>
+      <footer class="blockquote-footer">From @{{ review['username'].split("@")[0] }}</footer>
+    </blockquote>
+  {% endfor %}
+
+
+</div>
+{% endblock %}

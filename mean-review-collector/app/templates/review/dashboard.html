@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="container">
+	<h1>{% block title %}Welcome, {{ reviews[0]['username'].split("@")[0] }}!{% endblock %}</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <p class="lead">Want to <a href="{{ url_for('review.create') }}">write a mean review</a>?</p>
+  {% if reviews[0]['content'] != '' %}
+    <p class="lead">Here are your reviews:</p>
+    {% for review in reviews %}
+      <blockquote class="blockquote">
+        <p class="mb-0">{{ review['content'] }}</p>
+        <footer class="blockquote-footer">From @{{ review['username'].split("@")[0] }}
+          <a href="{{ url_for('review.edit', id=review['id']) }}">Edit</a>
+          <a href="{{ url_for('review.delete', id=review['id']) }}">Delete</a></footer>
+      </blockquote>
+    {% endfor %}
+    {% else %}
+      <p class="lead">There are no reviews by you yet!!!</p> 
+    {% endif %}
+</div>
+
+{% endblock %}

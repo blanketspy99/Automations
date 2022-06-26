@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block header %}
+<div class="container">
+  <h1>{% block title %}Register an account{% endblock %}</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form method="post">
+   <div class="form-group">
+      <label for="firstname">First Name:</label>
+      <input type="text" class="form-control" id="firstname" aria-describedby="firstName" placeholder="Enter your first  name:" name="first_username">
+    </div>
+	<div class="form-group">
+      <label for="surname">Surname:</label>
+      <input type="text" class="form-control" id="surname" aria-describedby="surname" placeholder="Enter your surname:" name="last_username">
+    </div>
+    <div class="form-group">
+      <label for="email">Email address:</label>
+      <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" name="username">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="user-password">Password:</label>
+      <input type="password" class="form-control" id="user-password" placeholder="Password" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}
