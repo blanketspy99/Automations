@@ -1,0 +1,26 @@
+---
+- name: Check for presence of stack
+  shell: docker stack ls | grep mean-stack
+  register: stack
+  
+- name: Check for existing services
+  shell: docker stack services mean-stack -q
+  register: service_id
+  when: stack != ""
+
+- name: Update the image if the stack service already exists
+  shell: "docker service update --image={{image}} {{service_id.stdout}}"
+  when: service_id.stdout != ""
+
+- name: Copy the compose file to tmp location
+  template:
+    src: docker-compose-flask.yml.j2
+    dest: /tmp
+  when: service_id.stdout == ""
+- name: Deploy stack from compose file
+  community.docker.docker_stack:
+    state: present
+    name: mean-stack
+    compose:
+      - "/tmp/{{compose_yml}}"
+  when: service_id.stdout == ""

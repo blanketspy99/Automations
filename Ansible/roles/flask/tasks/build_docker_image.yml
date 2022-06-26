@@ -1,0 +1,8 @@
+---
+- name: Build docker image from Dockerfile
+  community.docker.docker_image:
+    name: mean-app
+    build:
+      path: .
+    source: build
+    force_tag: yes

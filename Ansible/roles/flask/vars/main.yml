@@ -1,0 +1,6 @@
+---
+# vars file for roles/flask
+compose_yml: docker-compose-flask.yml
+image: mean-app
+replicas: 3
+port: 11055
