@@ -1,0 +1,12 @@
+---
+# handlers file for roles/tomcat
+- name: Start tomcat services
+  shell: nohup "{{tomcat_home}}/bin/startup.sh"
+
+- name: Stop  tomcat services
+  shell: nohup "{{tomcat_home}}/bin/shutdown.sh"
+
+- name: Restart tomcat services
+  shell: |
+          nohup "{{tomcat_home}}/bin/shutdown.sh"
+          nohup "{{tomcat_home}}/bin/startup.sh"  

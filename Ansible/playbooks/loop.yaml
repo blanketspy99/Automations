@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+          - name: add serveral users
+            user:
+                    name: "{{item}}"
+                    state: present
+                    groups: "docker"
+            with_items:
+                    - testuser1
+                    - testuser2  
+

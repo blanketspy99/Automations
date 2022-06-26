@@ -1,0 +1,3 @@
+---
+# vars file for roles/mongodb
+mongodb_home: /home/shahrukh/ansilab/mongodb

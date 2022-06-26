@@ -1,0 +1,18 @@
+---
+# tasks file for roles/tomcat
+#- name: Copy tar file to tomcat folder
+#  copy:
+#    src: /mnt/d/Ubuntu/apache-tomcat-8.5.61.tar.gz
+#    dest: /home/shahrukh/ansilab/tomcat
+#
+- name: Extract the tomcat tar
+  unarchive:
+          src: apache-tomcat-8.5.61.tar.gz
+          dest: /home/shahrukh/ansilab/tomcat
+
+- name: Change the tomcat port
+  template:
+          src: server.xml.j2
+          dest: "{{tomcat_home}}/conf/server.xml"
+  notify: Start tomcat services
+          

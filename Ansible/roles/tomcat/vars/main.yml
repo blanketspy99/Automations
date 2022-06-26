@@ -1,0 +1,5 @@
+---
+# vars file for roles/tomcat
+tomcat_port: 11011
+tomcat_home: /home/shahrukh/ansilab/tomcat/apache-tomcat-8.5.61
+war_file: application.war

@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  tasks:
+        - name: print the platform family
+          shell: echo $ansible_os_family
+          when: ansible_os_family == "Debian"
+        - name: Non Debian Machine
+          shell: echo "some other family"
+          when: ansible_os_family == "RedHat"

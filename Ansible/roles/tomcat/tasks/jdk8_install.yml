@@ -1,0 +1,9 @@
+---
+- name: Installing jre
+  apt: name=openjdk-8-jdk state=present update_cache=true
+  when: ansible_os_family == "Debian"
+  become: yes
+- name: Install jre in rhel / centos
+  yum: name=openjdk-8-jdk state=present update_cache=true
+  when: ansible_os_family == "Redhat"
+  become: yes

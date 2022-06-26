@@ -1,0 +1,6 @@
+---
+# tasks file for roles/mongodb
+- name: Extract mongodb tar
+  unarchive:
+          src: "{{mongodb_home}}/mongodb-linux-x86_64-3.6.3.tgz"
+          dest: "{{mongodb_home}}"

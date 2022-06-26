@@ -1,0 +1,4 @@
+---
+- include_tasks: jdk8_install.yml
+- include_tasks: tomcat_apache_install.yml
+- include_tasks: deploy_war.yml

@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+          - name: add serveral users
+            user:
+                    name: testuser
+                    state: present
+                    groups: "docker1"
